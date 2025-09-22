@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-commerce Simples</title>
+  <link rel="stylesheet" href="CSS/style.CSS" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">Minha Loja</h1>
+    <button id="open-cart" class="cart-button" aria-haspopup="true" aria-controls="cart">Carrinho (0)</button>
+  </header>
+
+  <main class="container">
+    <section id="products" class="products-grid">
+      <article class="card">
+        <img src="assets/img-camiseta.jpeg" alt="Camiseta Básica" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Camiseta Básica</h3>
+          <p class="card-category">Vestuário</p>
+          <p class="card-price">R$ 49,90</p>
+          <div class="card-actions">
+            <button class="primary" data-action="add" data-id="1" data-name="Camiseta Básica" data-price="49.9" data-image="https://via.placeholder.com/400x300?text=Camiseta">Adicionar</button>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="assets/img-tenis.jpg" alt="Tênis Running" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Tênis Running</h3>
+          <p class="card-category">Calçados</p>
+          <p class="card-price">R$ 299,90</p>
+          <div class="card-actions">
+            <button class="primary" data-action="add" data-id="2" data-name="Tênis Running" data-price="299.9" data-image="https://via.placeholder.com/400x300?text=Tenis">Adicionar</button>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="assets/img-fone.webp" alt="Fone Bluetooth" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Fone Bluetooth</h3>
+          <p class="card-category">Eletrônicos</p>
+          <p class="card-price">R$ 199,90</p>
+          <div class="card-actions">
+            <button class="primary" data-action="add" data-id="3" data-name="Fone Bluetooth" data-price="199.9" data-image="https://via.placeholder.com/400x300?text=Fone">Adicionar</button>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="assets/img-mochila.webp" alt="Mochila Urbana" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Mochila Urbana</h3>
+          <p class="card-category">Acessórios</p>
+          <p class="card-price">R$ 159,90</p>
+          <div class="card-actions">
+            <button class="primary" data-action="add" data-id="4" data-name="Mochila Urbana" data-price="159.9" data-image="https://via.placeholder.com/400x300?text=Mochila">Adicionar</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Carrinho -->
+  <aside id="cart" class="cart" aria-hidden="true">
+    <header class="cart-header">
+      <h2>Carrinho</h2>
+      <button id="close-cart" aria-label="Fechar carrinho">×</button>
+    </header>
+    <ul id="cart-items" class="cart-items" aria-live="polite"></ul>
+    <div class="cart-footer">
+      <div class="totals">
+        <span>Subtotal:</span> <strong id="cart-subtotal">R$ 0,00</strong>
+      </div>
+    </div>
+  </aside>
+
+  <script src="js/script.js" defer></script>
+</body>
+</html>
