@@ -48,7 +48,19 @@ const closeCartBtn = byId('close-cart');
 const cartItemsEl = byId('cart-items');
 const cartSubtotalEl = byId('cart-subtotal');
 
+// Controles de catálogo
+const searchEl = byId('search');
+const filterCategoryEl = byId('filter-category');
+const sortEl = byId('sort');
 
+// Modal de detalhes
+const productModal = byId('product-modal');
+const modalTitle = byId('modal-title');
+const modalDesc = byId('modal-desc');
+const modalPrice = byId('modal-price');
+const modalMainImg = byId('modal-main-img');
+const modalThumbs = byId('modal-thumbs');
+const modalAddCart = byId('modal-add-cart');
 
 // ======= Interações =======
 
@@ -73,7 +85,38 @@ function onProductsClick(e) {
   };
   cart.add(product, 1);
   renderCart();
-}
+
+
+return;
+  }
+  if (action === 'detalhes') {
+    // Preenche modal com dados do botão
+    const name = btn.dataset.name;
+    const price = Number(btn.dataset.price);
+    const desc = btn.dataset.desc  '';
+    const images = (btn.dataset.images  '').split(',').map(s => s.trim()).filter(Boolean);
+    modalTitle.textContent = name;
+    modalDesc.textContent = desc;
+    modalPrice.textContent = brl(price);
+    modalMainImg.src = images[0]  '';
+    modalMainImg.alt = name;
+    // Mini-galeria
+    modalThumbs.innerHTML = '';
+    images.forEach((src, idx) => {
+      const t = document.createElement('img');
+      t.src = src; t.alt = ${name} miniatura ${idx+1};
+      t.style.width = '64px'; t.style.height = '48px'; t.style.objectFit = 'cover'; t.style.border = '1px solid #e5e7eb'; t.style.borderRadius = '6px';
+      t.addEventListener('click', () => { modalMainImg.src = src; });
+      modalThumbs.appendChild(t);
+    });
+    // Guardar produto atual no botão de adicionar do modal
+    modalAddCart.dataset.id = btn.dataset.id;
+    modalAddCart.dataset.name = name;
+    modalAddCart.dataset.price = String(price);
+    modalAddCart.dataset.image = images[0]  '';
+    if (typeof productModal?.showModal === 'function') productModal.showModal();
+    else productModal?.setAttribute('open', '');
+  }
 
 
 function onCartClick(e) {
