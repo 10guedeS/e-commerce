@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- meta -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>E-commerce Simples</title>
+  <!-- css -->
   <link rel="stylesheet" href="CSS/style.CSS" />
 </head>
 <body>
+  <!-- header -->
   <header class="topbar">
     <h1 class="logo">Minha Loja</h1>
     <div class="controls">
@@ -29,16 +32,55 @@
     <button id="open-cart" class="cart-button" aria-haspopup="true" aria-controls="cart">Carrinho (0)</button>
   </header>
 
+  <!-- catálogo -->
   <main class="container">
     <section id="products" class="products-grid">
-      <article class="card" data-id="3" data-name="Fone Bluetooth" data-category="Eletrônicos" data-price="199.9">
+      <article class="card" data-id="1" data-name="Camiseta Básica" data-category="Vestuário" data-price="49.9">
         <img src="assets/img-camiseta.jpeg" alt="Camiseta Básica" class="card-img" />
         <div class="card-body">
           <h3 class="card-title">Camiseta Básica</h3>
           <p class="card-category">Vestuário</p>
           <p class="card-price">R$ 49,90</p>
           <div class="card-actions">
-           <button class="secondary" data-action="detalhes"
+            <button class="secondary" data-action="detalhes"
+              data-id="1"
+              data-name="Camiseta Básica"
+              data-price="49.9"
+              data-category="Vestuário"
+              data-desc="Camiseta 100% algodão, confortável para o dia a dia."
+              data-images="assets/img-camiseta.jpeg,assets/img-camiseta.jpeg,assets/img-camiseta.jpeg"
+            >Detalhes</button>
+            <button class="primary" data-action="add" data-id="1" data-name="Camiseta Básica" data-price="49.9" data-image="assets/img-camiseta.jpeg">Adicionar</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="2" data-name="Tênis Running" data-category="Calçados" data-price="299.9">
+        <img src="assets/img-tenis.jpg" alt="Tênis Running" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Tênis Running</h3>
+          <p class="card-category">Calçados</p>
+          <p class="card-price">R$ 299,90</p>
+          <div class="card-actions">
+            <button class="secondary" data-action="detalhes"
+              data-id="2"
+              data-name="Tênis Running"
+              data-price="299.9"
+              data-category="Calçados"
+              data-desc="Tênis leve e respirável para corridas e caminhadas."
+              data-images="assets/img-tenis.jpg,assets/img-tenis.jpg,assets/img-tenis.jpg"
+            >Detalhes</button>
+            <button class="primary" data-action="add" data-id="2" data-name="Tênis Running" data-price="299.9" data-image="assets/img-tenis.jpg">Adicionar</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="3" data-name="Fone Bluetooth" data-category="Eletrônicos" data-price="199.9">
+        <img src="assets/img-fone.webp" alt="Fone Bluetooth" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">Fone Bluetooth</h3>
+          <p class="card-category">Eletrônicos</p>
+          <p class="card-price">R$ 199,90</p>
+          <div class="card-actions">
+            <button class="secondary" data-action="detalhes"
               data-id="3"
               data-name="Fone Bluetooth"
               data-price="199.9"
@@ -50,16 +92,16 @@
           </div>
         </div>
       </article>
-      <article class="card" data-id="4" data-name="Mochila Urbana" data-category="Acessórios" data-price="159.9">
-        <img src="assets/img-fone.webp" alt="Fone Bluetooth" class="card-img" />
+      <article class="card" data-id="4" data-name="Mochila Balenciaga" data-category="Acessórios" data-price="159.9">
+        <img src="assets/img-mochila.webp" alt="Mochila Balenciaga" class="card-img" />
         <div class="card-body">
-          <h3 class="card-title">Fone Bluetooth</h3>
-          <p class="card-category">Eletrônicos</p>
-          <p class="card-price">R$ 199,90</p>
+          <h3 class="card-title">Mochila Balenciaga</h3>
+          <p class="card-category">Acessórios</p>
+          <p class="card-price">R$ 159,90</p>
           <div class="card-actions">
-           <button class="secondary" data-action="detalhes"
+            <button class="secondary" data-action="detalhes"
               data-id="4"
-              data-name="Mochila Urbana"
+              data-name="Mochila Balenciaga"
               data-price="159.9"
               data-category="Acessórios"
               data-desc="Mochila resistente com compartimento para notebook."
@@ -72,7 +114,7 @@
     </section>
   </main>
 
-  <!-- Carrinho -->
+  <!-- carrinho -->
   <aside id="cart" class="cart" aria-hidden="true">
     <header class="cart-header">
       <h2>Carrinho</h2>
@@ -83,10 +125,11 @@
       <div class="totals">
         <span>Subtotal:</span> <strong id="cart-subtotal">R$ 0,00</strong>
       </div>
+      <button id="go-checkout" class="primary">Ir para o checkout</button>
     </div>
   </aside>
 
-  <!-- Modal de Detalhes do Produto -->
+  <!-- modal -->
   <dialog id="product-modal">
     <form method="dialog" class="modal-content" style="border:none;max-width:900px;padding:0;">
       <button class="close" value="close" aria-label="Fechar" style="position:absolute;right:.5rem;top:.5rem;background:transparent;border:none;font-size:1.4rem;">×</button>
@@ -104,6 +147,47 @@
       </div>
     </form>
   </dialog>
+
+  <!-- checkout -->
+  <section id="checkout" class="checkout" hidden>
+    <h2>Checkout</h2>
+    <form id="checkout-form" novalidate>
+      <fieldset class="address">
+        <legend>Endereço</legend>
+        <div class="field">
+          <label for="cep">CEP</label>
+          <input id="cep" name="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" aria-describedby="cep-help" />
+          <small id="cep-help">Digite 8 dígitos do CEP para autocompletar.</small>
+        </div>
+        <div class="field">
+          <label for="rua">Rua</label>
+          <input id="rua" name="rua" autocomplete="address-line1" />
+        </div>
+        <div class="field small">
+          <label for="numero">Número</label>
+          <input id="numero" name="numero" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="bairro">Bairro</label>
+          <input id="bairro" name="bairro" autocomplete="address-line2" />
+        </div>
+        <div class="field">
+          <label for="cidade">Cidade</label>
+          <input id="cidade" name="cidade" autocomplete="address-level2" />
+        </div>
+        <div class="field small">
+          <label for="uf">UF</label>
+          <input id="uf" name="uf" maxlength="2" style="text-transform: uppercase;" autocomplete="address-level1" />
+        </div>
+        <div id="messages" class="messages" role="status" aria-live="polite"></div>
+      </fieldset>
+      <div class="actions">
+        <button type="button" id="finalizar" class="primary">Finalizar compra</button>
+        <button type="button" id="voltar" class="secondary">Voltar ao catálogo</button>
+      </div>
+    </form>
+  </section>
+
 
   <script src="js/script.js" defer></script>
 </body>

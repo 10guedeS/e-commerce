@@ -1,11 +1,10 @@
 'use strict';
 
-
-// ======= Utilidades =======
+// utilidades
 const brl = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const byId = (id) => document.getElementById(id);
 
-// ======= Estado =======
+// estado
 class CartItem {
   constructor(product, qty = 1) {
     this.id = product.id;
@@ -16,7 +15,7 @@ class CartItem {
   }
 }
 
-// Carrinho 
+// carrinho
 class Cart {
   constructor() {
     this.items = [];
@@ -40,7 +39,7 @@ class Cart {
 
 const cart = new Cart();
 
-// ======= Seletores =======
+// seletores
 const productsEl = byId('products');
 const openCartBtn = byId('open-cart');
 const cartAside = byId('cart');
@@ -48,12 +47,12 @@ const closeCartBtn = byId('close-cart');
 const cartItemsEl = byId('cart-items');
 const cartSubtotalEl = byId('cart-subtotal');
 
-// Controles de catálogo
+// catálogo
 const searchEl = byId('search');
 const filterCategoryEl = byId('filter-category');
 const sortEl = byId('sort');
 
-// Modal de detalhes
+// modal
 const productModal = byId('product-modal');
 const modalTitle = byId('modal-title');
 const modalDesc = byId('modal-desc');
@@ -62,7 +61,19 @@ const modalMainImg = byId('modal-main-img');
 const modalThumbs = byId('modal-thumbs');
 const modalAddCart = byId('modal-add-cart');
 
-// ======= Interações =======
+// checkout 
+const checkoutSection = byId('checkout');
+const goCheckoutBtn = byId('go-checkout');
+const finalizarBtn = byId('finalizar');
+const voltarBtn = byId('voltar');
+const messagesEl = byId('messages');
+const ruaEl = byId('rua');
+const numeroEl = byId('numero');
+const bairroEl = byId('bairro');
+const cidadeEl = byId('cidade');
+const ufEl = byId('uf');
+
+// interações
 
 function openCart() {
   cartAside?.classList.add('open');
@@ -75,49 +86,56 @@ function closeCart() {
 }
 
 function onProductsClick(e) {
-  const btn = e.target.closest('button[data-action="add"]');
+  const btn = e.target.closest('button');
   if (!btn) return;
-  const product = {
-    id: Number(btn.dataset.id),
-    name: btn.dataset.name,
-    price: Number(btn.dataset.price),
-    images: [btn.dataset.image]
-  };
-  cart.add(product, 1);
-  renderCart();
-
-
-return;
+  const action = btn.dataset.action;
+  if (action === 'add') {
+    const product = {
+      id: Number(btn.dataset.id),
+      name: btn.dataset.name,
+      price: Number(btn.dataset.price),
+      images: [btn.dataset.image]
+    };
+    cart.add(product, 1);
+    renderCart();
+    return;
   }
   if (action === 'detalhes') {
-    // Preenche modal com dados do botão
     const name = btn.dataset.name;
     const price = Number(btn.dataset.price);
-    const desc = btn.dataset.desc  '';
-    const images = (btn.dataset.images  '').split(',').map(s => s.trim()).filter(Boolean);
+    const desc = btn.dataset.desc || '';
+    const images = (btn.dataset.images || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
     modalTitle.textContent = name;
     modalDesc.textContent = desc;
     modalPrice.textContent = brl(price);
-    modalMainImg.src = images[0]  '';
+    modalMainImg.src = images[0] || '';
     modalMainImg.alt = name;
-    // Mini-galeria
+    // mini-galeria
     modalThumbs.innerHTML = '';
     images.forEach((src, idx) => {
       const t = document.createElement('img');
-      t.src = src; t.alt = ${name} miniatura ${idx+1};
-      t.style.width = '64px'; t.style.height = '48px'; t.style.objectFit = 'cover'; t.style.border = '1px solid #e5e7eb'; t.style.borderRadius = '6px';
+      t.src = src;
+      t.alt = `${name} miniatura ${idx + 1}`;
+      t.style.width = '64px';
+      t.style.height = '48px';
+      t.style.objectFit = 'cover';
+      t.style.border = '1px solid #e5e7eb';
+      t.style.borderRadius = '6px';
       t.addEventListener('click', () => { modalMainImg.src = src; });
       modalThumbs.appendChild(t);
     });
-    // Guardar produto atual no botão de adicionar do modal
+    // modal: adicionar ao carrinho
     modalAddCart.dataset.id = btn.dataset.id;
     modalAddCart.dataset.name = name;
     modalAddCart.dataset.price = String(price);
-    modalAddCart.dataset.image = images[0]  '';
+    modalAddCart.dataset.image = images[0] || '';
     if (typeof productModal?.showModal === 'function') productModal.showModal();
     else productModal?.setAttribute('open', '');
   }
-
+}
 
 function onCartClick(e) {
   const target = e.target;
@@ -151,7 +169,71 @@ function onCartChange(e) {
   }
 }
 
+// catálogo: busca/filtro/ordem
+function filterAndSort() {
+  if (!productsEl) return;
+  const q = (searchEl?.value || '').toLowerCase().trim();
+  const cat = filterCategoryEl?.value || '';
+  const cards = Array.from(productsEl.querySelectorAll('article.card'));
+  const visible = [];
+  cards.forEach(card => {
+    const name = (card.dataset.name || '').toLowerCase();
+    const category = card.dataset.category || '';
+    const match = (!q || name.includes(q)) && (!cat || category === cat);
+    card.style.display = match ? '' : 'none';
+    if (match) visible.push(card);
+  });
+  const sortVal = sortEl?.value;
+  if (sortVal) {
+    visible.sort((a, b) => {
+      const ap = parseFloat(a.dataset.price || '0');
+      const bp = parseFloat(b.dataset.price || '0');
+      const an = (a.dataset.name || '').toLowerCase();
+      const bn = (b.dataset.name || '').toLowerCase();
+      if (sortVal === 'price_asc') return ap - bp;
+      if (sortVal === 'price_desc') return bp - ap;
+      if (sortVal === 'name_asc') return an.localeCompare(bn);
+      if (sortVal === 'name_desc') return bn.localeCompare(an);
+      return 0;
+    });
+    
+    visible.forEach(card => productsEl.appendChild(card));
+  }
+}
 
+// checkout 
+function setMessage(msg, type = 'info') {
+  if (!messagesEl) return;
+  messagesEl.textContent = msg;
+  messagesEl.className = `messages ${type}`;
+}
+
+function finalizarCompra() {
+  if (cart.items.length === 0) {
+    setMessage('Seu carrinho está vazio.', 'warning');
+    return;
+  }
+  if (!ruaEl?.value || !numeroEl?.value || !cidadeEl?.value || !ufEl?.value) {
+    setMessage('Preencha rua, número, cidade e UF.', 'error');
+    return;
+  }
+  setMessage('Compra finalizada! Obrigado.', 'success');
+  cart.clear();
+  renderCart();
+}
+
+function goToCheckout() {
+  if (!checkoutSection) return;
+  checkoutSection.hidden = false;
+  closeCart();
+  window.scrollTo({ top: checkoutSection.offsetTop, behavior: 'smooth' });
+}
+
+function backToCatalog() {
+  if (!checkoutSection) return;
+  checkoutSection.hidden = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function updateCartBadge() {
   if (openCartBtn) openCartBtn.textContent = `Carrinho (${cart.count()})`;
@@ -180,19 +262,42 @@ function renderCart() {
   updateCartBadge();
 }
 
-// ======= Inicialização =======
+// inicialização
 function initEvents() {
   productsEl?.addEventListener('click', onProductsClick);
-
+  // catálogo
+  searchEl?.addEventListener('input', filterAndSort);
+  filterCategoryEl?.addEventListener('change', filterAndSort);
+  sortEl?.addEventListener('change', filterAndSort);
+  // carrinho
   openCartBtn?.addEventListener('click', openCart);
   closeCartBtn?.addEventListener('click', closeCart);
   cartItemsEl?.addEventListener('click', onCartClick);
   cartItemsEl?.addEventListener('change', onCartChange);
+  // modal
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('#product-modal .close')) productModal?.close?.();
+  });
+  modalAddCart?.addEventListener('click', () => {
+    const product = {
+      id: Number(modalAddCart.dataset.id),
+      name: modalAddCart.dataset.name,
+      price: Number(modalAddCart.dataset.price),
+      images: [modalAddCart.dataset.image]
+    };
+    cart.add(product, 1);
+    renderCart();
+  });
+  // checkout
+  goCheckoutBtn?.addEventListener('click', goToCheckout);
+  finalizarBtn?.addEventListener('click', finalizarCompra);
+  voltarBtn?.addEventListener('click', backToCatalog);
 }
 
 function init() {
   renderCart();
   updateCartBadge();
+  filterAndSort();
   initEvents();
 }
 
