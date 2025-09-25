@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="CSS/style.CSS" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <div
+      id="js-warning"
+      style="display:none;position:fixed;inset:0;z-index:9999;background:#fee2e2;color:#991b1b;padding:16px;font-family:Inter,system-ui,Arial"
+    >
+      <strong>O JavaScript do app não carregou.</strong>
+    </div>
+
     <header class="topbar">
       <div class="container topbar__content">
         <div class="brand" aria-label="Ize Store">
@@ -17,10 +27,20 @@
           <span class="brand__name">Store</span>
         </div>
         <label class="search" aria-label="Buscar produtos">
-          <input id="search-input" type="search" placeholder="Buscar produtos..." autocomplete="off" />
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Buscar produtos..."
+            autocomplete="off"
+          />
           <span class="search__icon" aria-hidden="true">🔎</span>
         </label>
-        <button id="btn-open-cart" class="btn btn--ghost" aria-haspopup="dialog" aria-controls="cart-dialog">
+        <button
+          id="btn-open-cart"
+          class="btn btn--ghost"
+          aria-haspopup="dialog"
+          aria-controls="cart-dialog"
+        >
           🛒 <span class="cart-count" id="cart-count">0</span>
           <span class="sr-only">Abrir carrinho</span>
         </button>
@@ -30,16 +50,33 @@
     <main class="container">
       <section class="hero">
         <h1>Bem-vindo à <span class="gradient">IzeStore</span></h1>
-        <p>Descubra os melhores produtos com preços incríveis e entrega garantida.</p>
+        <p>
+          Descubra os melhores produtos com preços incríveis e entrega garantida.
+        </p>
       </section>
 
       <section class="toolbar" aria-label="Controles do catálogo">
         <div class="chips" role="tablist" aria-label="Categorias">
-          <button class="chip is-active" data-category="all" role="tab" aria-selected="true">Todos</button>
-          <button class="chip" data-category="Eletrônicos" role="tab" aria-selected="false">Eletrônicos</button>
-          <button class="chip" data-category="Informática" role="tab" aria-selected="false">Informática</button>
-          <button class="chip" data-category="Acessórios" role="tab" aria-selected="false">Acessórios</button>
-          <button class="chip" data-category="Fotografia" role="tab" aria-selected="false">Fotografia</button>
+          <button
+            class="chip is-active"
+            data-category="all"
+            role="tab"
+            aria-selected="true"
+          >
+            Todos
+          </button>
+          <button class="chip" data-category="Eletrônicos" role="tab">
+            Eletrônicos
+          </button>
+          <button class="chip" data-category="Informática" role="tab">
+            Informática
+          </button>
+          <button class="chip" data-category="Acessórios" role="tab">
+            Acessórios
+          </button>
+          <button class="chip" data-category="Fotografia" role="tab">
+            Fotografia
+          </button>
         </div>
         <div class="sort">
           <label for="sort-select">Ordenar por:</label>
@@ -52,43 +89,54 @@
 
       <section class="catalog-header">
         <h2>Todos os Produtos</h2>
-        <span id="result-count" class="muted">0 produtos encontrados</span>
+        <span id="result-count" class="muted"
+          >0 produtos encontrados</span
+        >
       </section>
 
-      <section id="products-grid" class="grid" aria-live="polite" aria-busy="false"></section>
+      <section
+        id="products-grid"
+        class="grid"
+        aria-live="polite"
+        aria-busy="false"
+      ></section>
     </main>
 
-    <!-- Modal Detalhes do Produto -->
-    <dialog id="product-modal" class="modal" aria-labelledby="modal-title" aria-modal="true">
-      <form method="dialog" class="modal__container">
-        <header class="modal__header">
-          <h3 id="modal-title">Detalhes do produto</h3>
-          <button class="icon-btn" value="close" aria-label="Fechar">✕</button>
-        </header>
-        <div class="modal__body" id="modal-body"></div>
-        <footer class="modal__footer">
-          <button class="btn" id="modal-add-to-cart">Adicionar ao carrinho</button>
-        </footer>
-      </form>
-    </dialog>
-
-    <!-- Carrinho (sidebar dialog) -->
-    <dialog id="cart-dialog" class="cart" aria-labelledby="cart-title" aria-modal="true">
+    <!-- carrinho -->
+    <dialog
+      id="cart-dialog"
+      class="cart"
+      aria-labelledby="cart-title"
+      aria-modal="true"
+    >
       <form method="dialog" class="cart__container">
         <header class="cart__header">
           <h3 id="cart-title">Seu carrinho</h3>
-          <button class="icon-btn" value="close" aria-label="Fechar carrinho">✕</button>
+          <button class="icon-btn" value="close" aria-label="Fechar carrinho">
+            ✕
+          </button>
         </header>
         <div id="cart-items" class="cart__items" aria-live="polite"></div>
         <div class="cart__summary">
-          <div class="row"><span>Subtotal</span><strong id="cart-subtotal">R$ 0,00</strong></div>
-          <div class="row"><span>Total</span><strong id="cart-total">R$ 0,00</strong></div>
-          <button id="btn-go-checkout" class="btn btn--primary" value="cancel" formmethod="dialog">Ir para o checkout</button>
+          <div class="row">
+            <span>Subtotal</span><strong id="cart-subtotal">R$ 0,00</strong>
+          </div>
+          <div class="row">
+            <span>Total</span><strong id="cart-total">R$ 0,00</strong>
+          </div>
+          <button
+            id="btn-go-checkout"
+            class="btn btn--primary"
+            value="cancel"
+            formmethod="dialog"
+          >
+            Ir para o checkout
+          </button>
         </div>
       </form>
     </dialog>
 
-    <!-- Checkout -->
+    <!-- checkout -->
     <section id="checkout" class="checkout container" hidden>
       <h2>Checkout</h2>
       <div class="checkout__grid">
@@ -97,8 +145,17 @@
             <legend>Endereço</legend>
             <div class="field">
               <label for="cep">CEP</label>
-              <input id="cep" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code" />
-              <small id="cep-help" class="muted">Digite 8 dígitos para buscar no ViaCEP</small>
+              <input
+                id="cep"
+                name="cep"
+                inputmode="numeric"
+                maxlength="9"
+                placeholder="00000-000"
+                autocomplete="postal-code"
+              />
+              <small id="cep-help" class="muted"
+                >Digite 8 dígitos para buscar no ViaCEP</small
+              >
             </div>
             <div class="field">
               <label for="rua">Rua</label>
@@ -118,20 +175,94 @@
             </div>
             <div class="field">
               <label for="uf">UF</label>
-              <input id="uf" name="uf" maxlength="2" class="uf" autocomplete="address-level1" />
+              <input
+                id="uf"
+                name="uf"
+                maxlength="2"
+                class="uf"
+                autocomplete="address-level1"
+              />
             </div>
-            <div role="status" aria-live="polite" id="cep-status" class="aria-status"></div>
+            <div
+              role="status"
+              aria-live="polite"
+              id="cep-status"
+              class="aria-status"
+            ></div>
           </fieldset>
-          <button type="submit" class="btn btn--primary">Finalizar compra</button>
+          <button type="submit" class="btn btn--primary">
+            Finalizar compra
+          </button>
         </form>
         <aside class="summary">
           <h3>Resumo</h3>
           <div id="checkout-items" class="summary__items"></div>
-          <div class="row"><span>Total</span><strong id="checkout-total">R$ 0,00</strong></div>
+          <div class="row">
+            <span>Total</span><strong id="checkout-total">R$ 0,00</strong>
+          </div>
         </aside>
       </div>
     </section>
 
-    <script type="module" src="./js/main.js"></script>
+    <!-- detalhes do produto -->
+    <dialog id="product-dialog" aria-labelledby="product-title" aria-modal="true" class="product-dialog">
+      <form method="dialog" class="product-dialog__container">
+        <header class="product-dialog__header">
+          <h3 id="product-title">Detalhes do produto</h3>
+          <button class="icon-btn" value="close" aria-label="Fechar detalhes">✕</button>
+        </header>
+        <div class="product-dialog__content">
+          <div class="media">
+            <img id="pd-image" alt="Imagem do produto" />
+            <div id="pd-thumbs" class="thumbs" aria-label="Galeria de imagens"></div>
+          </div>
+          <div class="info">
+            <small id="pd-category" class="muted"></small>
+            <h4 id="pd-name"></h4>
+            <p id="pd-desc" class="muted"></p>
+            <strong id="pd-price"></strong>
+            <div class="actions">
+              <button id="pd-add" class="btn btn--primary" type="button">Adicionar ao carrinho</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- sucesso da compra -->
+    <dialog id="success-dialog" aria-labelledby="success-title" aria-modal="true" class="success-dialog">
+      <form method="dialog" class="success-dialog__container">
+        <header class="success-dialog__header">
+          <h3 id="success-title">Compra realizada</h3>
+          <button class="icon-btn" value="close" aria-label="Fechar">✕</button>
+        </header>
+        <div class="success-dialog__content">
+          <p>Compra finalizada com sucesso! Obrigado por comprar na <strong>Ize Store</strong>.</p>
+        </div>
+        <footer class="success-dialog__footer">
+          <button id="success-ok" class="btn btn--primary" value="close">OK</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <script>
+      // Fallback: se o módulo não inicializar em 1500ms, mostra aviso
+      (function () {
+        window.__appBooted = false;
+        setTimeout(function () {
+          if (!window.__appBooted) {
+            var w = document.getElementById("js-warning");
+            if (w) w.style.display = "block";
+          }
+        }, 1500);
+      })();
+    </script>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/main.js"></script>
+    
   </body>
-  </html>
+</html>

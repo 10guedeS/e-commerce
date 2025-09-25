@@ -1,104 +1,79 @@
-// cart.js - lógica do carrinho
-import { formatCurrency, saveLS, readLS, el, qs } from './utils.js';
-
-export class CartItem {
+'use strict';
+// estado
+class CartItem {
   constructor(product, qty = 1) {
     this.id = product.id;
     this.name = product.name;
     this.price = product.price;
-    this.image = product.image;
     this.qty = qty;
+    this.image = product.images[0];
   }
 }
 
-export class Cart {
-  #items = new Map();
-  #key = 'cart:v1';
-
+// carrinho
+class Cart {
   constructor() {
-    const data = readLS(this.#key, []);
-    for (const it of data) this.#items.set(it.id, Object.assign(new CartItem(it, it.qty), it));
+    this.items = [];
   }
-
-  toArray() { return Array.from(this.#items.values()); }
-  count() { return this.toArray().reduce((a, i) => a + i.qty, 0); }
-  subtotal() { return this.toArray().reduce((a, i) => a + i.price * i.qty, 0); }
-  total() { return this.subtotal(); }
-
+  count() { return this.items.reduce((s, it) => s + it.qty, 0); }
+  subtotal() { return this.items.reduce((s, it) => s + it.price * it.qty, 0); }
   add(product, qty = 1) {
-    const it = this.#items.get(product.id);
-    if (it) it.qty += qty; else this.#items.set(product.id, new CartItem(product, qty));
-    this.#persist();
+    const found = this.items.find(i => i.id === product.id);
+    if (found) found.qty += qty; else this.items.push(new CartItem(product, qty));
   }
-
-  update(id, qty) {
-    const it = this.#items.get(id);
-    if (!it) return;
-    it.qty = Math.max(1, qty|0);
-    this.#persist();
-  }
-
   remove(id) {
-    this.#items.delete(id);
-    this.#persist();
+    this.items = this.items.filter(i => i.id !== id);
   }
-
-  clear() { this.#items.clear(); this.#persist(); }
-
-  #persist() { saveLS(this.#key, this.toArray()); this.onChange?.(this); }
+  setQty(id, qty) {
+    const it = this.items.find(i => i.id === id);
+    if (!it) return;
+    it.qty = Math.max(1, qty);
+  }
+  clear() { this.items = []; }
 }
 
-// Renderização do carrinho no dialog
-export const renderCart = (cart) => {
-  const cont = qs('#cart-items');
-  cont.innerHTML = '';
-  for (const item of cart.toArray()) {
-    const row = el('div', { className: 'cart-item' }, [
-      el('img', { alt: item.name, src: item.image }),
-      el('div', {}, [
-        el('strong', { textContent: item.name }),
-        el('div', { className: 'muted', textContent: formatCurrency(item.price) }),
-        el('div', { className: 'qty' }, [
-          el('label', { className: 'sr-only', htmlFor: `qty-${item.id}`, textContent: 'Quantidade' }),
-          el('input', { id: `qty-${item.id}`, type: 'number', min: 1, value: item.qty, 'data-id': item.id })
-        ])
-      ]),
-      el('button', { className: 'icon-btn', 'data-remove': item.id, title: 'Remover' }, ['🗑️'])
-    ]);
-    cont.appendChild(row);
-  }
-  qs('#cart-subtotal').textContent = formatCurrency(cart.subtotal());
-  qs('#cart-total').textContent = formatCurrency(cart.total());
-  qs('#cart-count').textContent = cart.count();
-};
+const cart = new Cart();
 
-export const bindCartEvents = (cart) => {
-  const dialog = qs('#cart-dialog');
+// elementos ui
+const cartCountEl = document.getElementById('cart-count');
+const cartItemsEl = document.getElementById('cart-items');
+const cartSubtotalEl = document.getElementById('cart-subtotal');
+const cartTotalEl = document.getElementById('cart-total');
 
-  // Abrir/fechar
-  qs('#btn-open-cart').addEventListener('click', () => dialog.showModal());
+// atualiza ui
+function updateCartUI() {
+  cartCountEl.textContent = cart.count();
+  cartSubtotalEl.textContent = `R$ ${cart.subtotal().toFixed(2)}`;
+  cartTotalEl.textContent = `R$ ${cart.subtotal().toFixed(2)}`;
 
-  // Delegação de eventos para quantidade e remover
-  qs('#cart-items').addEventListener('input', (e) => {
-    const input = e.target.closest('input[type="number"]');
-    if (!input) return;
-    const id = input.getAttribute('data-id');
-    const qty = parseInt(input.value || '1', 10);
-    cart.update(id, qty);
-    renderCart(cart);
+  cartItemsEl.innerHTML = '';
+  cart.items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img src="${item.image}" alt="${item.name}">
+      <div>
+        <strong>${item.name}</strong>
+        <div class="price">R$ ${(item.price * item.qty).toFixed(2)}</div>
+      </div>
+      <div class="qty">
+        <input type="number" min="1" value="${item.qty}">
+        <button class="icon-btn remove">✕</button>
+      </div>
+    `;
+
+    // atualizar quantidade
+    div.querySelector('input').addEventListener('change', e => {
+      cart.setQty(item.id, parseInt(e.target.value));
+      updateCartUI();
+    });
+
+    // remover item
+    div.querySelector('.remove').addEventListener('click', () => {
+      cart.remove(item.id);
+      updateCartUI();
+    });
+
+    cartItemsEl.appendChild(div);
   });
-
-  qs('#cart-items').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-remove]');
-    if (!btn) return;
-    cart.remove(btn.getAttribute('data-remove'));
-    renderCart(cart);
-  });
-
-  // Ir para checkout
-  qs('#btn-go-checkout').addEventListener('click', () => {
-    document.querySelector('#checkout').hidden = false;
-    dialog.close();
-    window.scrollTo({ top: document.querySelector('#checkout').offsetTop - 20, behavior: 'smooth' });
-  });
-};
+}
