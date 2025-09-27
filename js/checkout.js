@@ -1,5 +1,4 @@
 'use strict';
-// checkout: cep, validações e mensagens
 
 // elementos
 const formEl = document.getElementById('checkout-form');
@@ -65,7 +64,6 @@ async function fetchViaCEP(cepDigits) {
   } catch (err) {
     console.error('[ViaCEP] Falha: ', err);
     setStatus('Falha ao consultar CEP. Verifique sua conexão e preencha manualmente.', 'error');
-    // mantém campos editáveis
   }
 }
 
@@ -74,7 +72,6 @@ function onCepInput(e) {
   if (e.target.value !== masked) e.target.value = masked;
   const digits = onlyDigits(masked);
   if (digits.length === 8) {
-    // consulta
     fetchViaCEP(digits);
   } else if (digits.length < 8) {
     setStatus('Digite 8 dígitos para buscar no ViaCEP', 'info');
@@ -105,10 +102,8 @@ function onSubmit(e) {
   setStatus('Compra finalizada! Obrigado.', 'success');
   cart.clear();
   if (typeof updateCartUI === 'function') updateCartUI();
-  // abre popup de sucesso e limpa ao fechar
   try { submitBtn && (submitBtn.disabled = true); } catch (_) {}
   if (successDialog) {
-    // ao fechar, limpar checkout
     const onClose = () => {
       clearCheckoutUI();
       try { submitBtn && (submitBtn.disabled = false); } catch (_) {}
@@ -118,7 +113,6 @@ function onSubmit(e) {
     if (typeof successDialog.showModal === 'function') successDialog.showModal();
     else successDialog.setAttribute('open', '');
   } else {
-    // fallback
     alert('Compra finalizada com sucesso!');
     clearCheckoutUI();
     try { submitBtn && (submitBtn.disabled = false); } catch (_) {}
@@ -136,7 +130,6 @@ if (document.readyState === 'loading') {
   bindCheckout();
 }
 
-// limpa formulário, mensagens e resumo; oculta a seção
 function clearCheckoutUI() {
   try {
     formEl?.reset();

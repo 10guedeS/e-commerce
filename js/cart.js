@@ -1,5 +1,5 @@
 'use strict';
-// estado
+
 class CartItem {
   constructor(product, qty = 1) {
     this.id = product.id;
@@ -10,7 +10,7 @@ class CartItem {
   }
 }
 
-// carrinho
+
 class Cart {
   constructor() {
     this.items = [];
@@ -34,13 +34,13 @@ class Cart {
 
 const cart = new Cart();
 
-// elementos ui
+
 const cartCountEl = document.getElementById('cart-count');
 const cartItemsEl = document.getElementById('cart-items');
 const cartSubtotalEl = document.getElementById('cart-subtotal');
 const cartTotalEl = document.getElementById('cart-total');
+bvfvfbbvfbbgbhbvvbbbbbbbbb
 
-// atualiza ui
 function updateCartUI() {
   cartCountEl.textContent = cart.count();
   cartSubtotalEl.textContent = `R$ ${cart.subtotal().toFixed(2)}`;

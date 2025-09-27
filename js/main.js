@@ -56,16 +56,13 @@
   }
 
   function bindEvents() {
-    // abrir carrinho
     btnOpenCart?.addEventListener('click', openCartDialog);
-    // ir para checkout
     btnGoCheckout?.addEventListener('click', goToCheckout);
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bindEvents);
   } else {
-    // dom pronto
     bindEvents();
   }
 

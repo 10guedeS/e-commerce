@@ -1,5 +1,4 @@
 'use strict';
-// catalogo
 
 const CATALOG = [
   {
@@ -109,7 +108,7 @@ const debounce = (fn, ms = 200) => {
   return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
 };
 
-// elementos do DOM (espera que existam no HTML)
+// elementos do DOM 
 const productsGrid = document.getElementById('products-grid');
 const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
@@ -152,17 +151,17 @@ function createCard(p) {
   return card;
 }
 
-// renderiza grid
+
 function renderCatalog() {
   if (!productsGrid) return;
   productsGrid.innerHTML = '';
   for (const p of CATALOG) {
     productsGrid.appendChild(createCard(p));
   }
-  filterAndSort(); // aplica estado inicial de filtro/ordem
+  filterAndSort();
 }
 
-// filtro e ordenação
+
 function filterAndSort() {
   if (!productsGrid) return;
 
